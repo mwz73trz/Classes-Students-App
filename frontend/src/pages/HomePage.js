@@ -16,6 +16,40 @@ class HomePage extends Component {
     }
   };
 
+  createSubject = async () => {
+    try {
+      let input = document.getElementById("new-subject-name");
+      if (input) {
+        let newSubjectParam = {
+          name: input.value,
+        };
+        let data = await schoolAPI.addSubject(newSubjectParam);
+        if (data) {
+          let newSubjects = [...this.state.subjects, data];
+          this.setState({ subjects: newSubjects });
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  deleteSubject = async (subjectId) => {
+    try {
+      if (subjectId > 0) {
+        let result = await schoolAPI.deleteSubject(subjectId);
+        if (result.success) {
+          let newSubjects = this.state.subjects.filter((subject, index) => {
+            return subject.id !== subjectId;
+          });
+          this.setState({ subjects: newSubjects });
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   componentDidMount() {
     this.getSubjects();
   }
@@ -24,7 +58,7 @@ class HomePage extends Component {
     let subjectElements = this.state.subjects.map((subject, index) => {
       return (
         <li key={`subject-${index}`}>
-          <Subjects subject={subject} />
+          <Subjects subject={subject} handleDelete={this.deleteSubject} />
         </li>
       );
     });
@@ -35,6 +69,9 @@ class HomePage extends Component {
         <ul type="simple-list" style={{ listStyle: "none" }}>
           {subjectElements}
         </ul>
+        <hr />
+        <input id="new-subject-name" placeholder="new subject" />
+        <button onClick={this.createSubject}>Add New Subject</button>
       </div>
     );
   }

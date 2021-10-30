@@ -8,6 +8,9 @@ class Subjects extends Component {
         <Link to={`/subjects/${this.props.subject.id}`}>
           {this.props.subject.name}
         </Link>
+        <button onClick={() => this.props.handleDelete(this.props.subject.id)}>
+          Delete
+        </button>
       </span>
     );
   }

@@ -1,4 +1,5 @@
 import { Component } from "react";
+import { Link } from "react-router-dom";
 import schoolAPI from "../api/schoolAPI";
 
 class SubjectStudentsPage extends Component {
@@ -18,6 +19,27 @@ class SubjectStudentsPage extends Component {
     }
   }
 
+  addStudent = async () => {
+    try {
+      let inputFirsName = document.getElementById("new-student-first_name");
+      let inputLastName = document.getElementById("new-student-last_name");
+      if (inputFirsName && inputLastName) {
+        let newStudentParams = {
+          subject: this.state.subject.id,
+          first_name: inputFirsName.value,
+          last_name: inputLastName.value,
+          pass_fail: true,
+        };
+        let data = await schoolAPI.addStudent(newStudentParams);
+        if (data) {
+          this.getSubject();
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   componentDidMount() {
     this.getSubject();
   }
@@ -26,7 +48,11 @@ class SubjectStudentsPage extends Component {
     let studentElements = this.state.subject.students.map((student, index) => {
       return (
         <li key={`student-${index}`}>
-          {student.first_name} {student.last_name}
+          <Link
+            to={`/subjects/${this.state.subject.id}/students/${student.id}`}
+          >
+            {student.first_name} {student.last_name}
+          </Link>
         </li>
       );
     });
@@ -45,6 +71,10 @@ class SubjectStudentsPage extends Component {
       <div>
         <h1>{this.state.subject.name}</h1>
         {this.renderStudents()}
+        <hr />
+        <input id="new-student-first_name" placeholder="first name" />
+        <input id="new-student-last_name" placeholder="last name" />
+        <button onClick={this.addStudent}>Add New Student</button>
       </div>
     );
   }

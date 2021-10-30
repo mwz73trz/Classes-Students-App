@@ -3,6 +3,7 @@ import { Component } from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import SubjectStudentsPage from "./pages/SubjectStudentsPage";
+import StudentDetailPage from "./pages/StudentDetailPage";
 
 class App extends Component {
   render() {
@@ -15,6 +16,11 @@ class App extends Component {
               path="/subjects/:subjectId"
               exact
               component={SubjectStudentsPage}
+            />
+            <Route
+              path="/subjects/:subjectId/students/:studentId"
+              exact
+              component={StudentDetailPage}
             />
           </div>
         </Router>
